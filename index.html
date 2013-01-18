@@ -1,0 +1,994 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Test Page</title>
+<script src="jquery-1.8.2.min.js"></script>
+<script src="jqueryUI/jquery-ui-1.9.2.custom.min.js"></script>
+<link rel="stylesheet" href="jqueryUI/css/start/jquery-ui-1.9.2.custom.min.css"/>
+<style>
+	.sliderLabels {
+		font-family:Arial, Helvetica, sans-serif;
+		text-align:left;
+		font-size:small
+	}
+	.slider{
+		width:420px;
+		margin: 0px 0px 0px 0px;
+	}
+	.longslider{
+		width:780px;
+		margin: 0px 0px 0px 0px;
+	}
+
+	.halfslider{
+		width:210px;
+		margin: 0px 0px 0px 0px;
+	}
+	input{
+		width:40px;
+		text-align:center;
+	}
+	body {
+		text-align:center;
+		margin:auto;
+	}
+	#mySVG {
+		border:5px black outset;
+	}
+	.heading {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size: small;
+	}
+	.ui-progressbar-value { 
+		background:red;
+	}
+	.auto-style1 {
+		text-align: right;
+	}
+</style>
+</head>
+
+<body onload="jqueryAJAX()">
+	<strong>
+	<table style="margin:0px auto 0px auto" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="heading" style="width: 100px"><strong>Biomass production</strong></td>
+			<td><div id="biomassBar" style="width: 420px"></div></td>
+			<td><strong><input type="text" id="biomassValue"/></strong></td>
+			<td class="sliderLabels"><strong>gDW/hour</strong></td>		
+		</tr>
+	</table>
+
+	<embed src="readyforprojection.svg" type="image/svg+xml" id="mySVG" /></strong>
+	
+	<table style="margin:0px auto 0px auto" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="heading" rowspan="7" style="width: 100px"><strong>
+			Exchange<br>Flux<br>Constraints</strong></td>
+			<td style="background-image:url('tableBack.png'); padding:0px 0px 0px 0px; background-repeat:no-repeat; height: 25px;" colspan="2">
+			</td>
+			<td style="height: 25px"></td>
+			<td class="sliderLabels" style="height: 25px" colspan="2"><em>(mmol/gDW/hour)</em><strong>*</strong></td>
+		</tr>
+		<tr>
+			<td colspan="2"><p class="slider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="glucoseSlider"></p></td>
+			<td><input type="text" id="glucoseValue"/></td>
+			<td class="sliderLabels" colspan="2">Glucose (constrain max influx)</td>				
+		</tr>
+		<tr>
+			<td colspan="2"><p class="slider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="llactateSlider"></p></td>
+			<td><input type="text" id="llactateValue"/></td>
+			<td class="sliderLabels" colspan="2">L-Lactate (constrain max efflux)</td>				
+		</tr>
+		<tr>
+			<td style="background-image:url('thirdscale.png'); padding:0px 0px 0px 0px; margin:0 0 0 0; background-repeat:no-repeat; height: 25px;" colspan="2">
+			<p class="slider" style="height: auto"></p></td>
+			<td style="height: 17px"> </td>
+			<td class="sliderLabels" style="height: 17px" colspan="2"></td>
+		</tr>
+
+		<tr>
+			<td colspan="2"><p class="halfslider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="malateSlider"></p></td>
+			<td><input type="text" id="malateValue"/></td>
+			<td class="sliderLabels" colspan="2">Malate (constrain max efflux, influx not 
+			allowed)</td>				
+		</tr>				
+		<tr>
+			<td colspan="2">
+			<p class="slider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="glycerolSlider"></p></td>
+			<td><input type="text" id="glycerolValue"/></td>
+			<td class="sliderLabels" colspan="2">Glycerol (define precisely)</td>				
+		</tr>
+		<tr>
+			<td colspan="2"><p class="halfslider" style="margin-left:210px" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="glutamineSlider"></p></td>
+			<td><input type="text" id="glutamineValue"/></td>
+			<td class="sliderLabels" colspan="2">Glutamine (constrain max influx, efflux not 
+			allowed)</td>				
+		</tr>
+
+		<tr>
+			<td style="width: 100px"></td>			
+			<td style="background-image:url('secondScale.png'); padding:0px 0px 0px 0px; background-repeat:no-repeat; height:21px" colspan="2">
+			</td>
+			<td style="height: 21px"> </td>
+			<td class="sliderLabels" style="height: 21px" colspan="2"></td>
+		</tr>
+
+		<tr>
+			<td class="heading" style="width: 100px" rowspan="2"><strong>Energy <br>costs</strong></td>
+			<td colspan="2"><p class="slider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="haemoglobinSlider"></p></td>
+			<td><input type="text" id="haemoglobinValue"/></td>
+			<td class="sliderLabels" colspan="2">mol. ATP/Haem formed (haemoglobin digestion cost)</td>				
+		</tr>			
+		<tr>
+			<td colspan="2"><p class="slider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="atpSlider"></p></td>
+			<td><input type="text" id="atpValue"/></td>
+			<td class="sliderLabels" colspan="2">mmol. ATP/gDW (maintenance cost)</td>				
+		</tr>
+		
+				<tr>
+			<td style="width: 100px"></td>			
+			<td style="padding:0px 0px 0px 0px; background-repeat:no-repeat; height:21px" colspan="2">
+			</td>
+			<td style="height: 21px"> </td>
+			<td class="sliderLabels" style="height: 21px" colspan="2"></td>
+		</tr>
+
+		<tr>
+			<td class="heading" style="width: 100px"><strong>Biomass composition</strong></td>
+			<td colspan="5">
+			<p class="longslider" onmouseup="jqueryAJAX()" onkeyup="jqueryAJAX()" id="biomassSlider"></p></td>
+		</tr>			
+
+		<tr>
+			<td class="heading" style="width: 100px">&nbsp;</td>
+			<td style="width: 316px"><input type="text" id="proteinValue"/></td>
+			<td style="width: 56px" class="auto-style1"><input type="text" id="dnaValue"/></td>
+			<td><input type="text" id="rnaValue"/></td>
+			<td><input type="text" id="carbValue"/></td>				
+			<td><input type="text" id="fatValue"/></td>				
+		</tr>			
+
+		<tr>
+			<td class="heading" style="width: 100px">&nbsp;</td>
+			<td class="heading">% Protein&nbsp;</td>
+			<td class="heading">% DNA</td>
+			<td class="heading">% RNA</td>
+			<td class="heading">% Carbohydrate</td>				
+			<td class="heading">% Fat</td>				
+		</tr>			
+
+		</table>
+	<script type="text/javascript">
+	    // Glucose Slider
+	    $(function() {
+	        $( "#glucoseSlider" ).slider({ range: "min", step:0.01, value: 38.48, min: -64, max: 64,
+	            	slide: function( event, ui ) { $( "#glucoseValue" ).val(ui.value); }
+	        });
+	        $( "#glucoseValue" ).val($("#glucoseSlider").slider("value"));
+        });
+        // llactate Slider
+	    $(function() {
+	        $( "#llactateSlider" ).slider({ range: "max", step:0.01, value: -60, min: -64, max: 64,
+	            	slide: function( event, ui ) { $( "#llactateValue" ).val(ui.value); }
+	        });
+	        $( "#llactateValue" ).val($("#llactateSlider").slider("value"));
+        });
+        // malate Slider
+	    $(function() {
+	        $( "#malateSlider" ).slider({ range: "max", step:0.01, value: -2.38, min: -6.4, max: 0,
+	            	slide: function( event, ui ) { $( "#malateValue" ).val(ui.value); }
+	        });
+	        $( "#malateValue" ).val($("#malateSlider").slider("value"));
+        });
+        // glycerol slider
+        $(function() {
+	        $( "#glycerolSlider" ).slider({ range: false, step:0.01, value: -3.33, min: -6.4, max: 6.4,
+	            	slide: function( event, ui ) { $( "#glycerolValue" ).val(ui.value); }
+	        });
+	        $( "#glycerolValue" ).val($("#glycerolSlider").slider("value"));
+        });
+        // glutamine Slider
+	    $(function() {
+	        $( "#glutamineSlider" ).slider({ range: "min", step:0.01, value: 0.98, min: 0, max: 6.4,
+	            	slide: function( event, ui ) { $( "#glutamineValue" ).val(ui.value); }
+	        });
+	        $( "#glutamineValue" ).val($("#glutamineSlider").slider("value"));
+        });
+
+        // Haemoglobin Slider
+	    $(function() {
+	        $( "#haemoglobinSlider" ).slider({ range: "min", value: 10, min: 0, max: 60,
+	            	slide: function( event, ui ) { $( "#haemoglobinValue" ).val(ui.value); }
+	        });
+	        $( "#haemoglobinValue" ).val($("#haemoglobinSlider").slider("value"));
+        });
+        // ATP Slider
+	    $(function() {
+	        $( "#atpSlider" ).slider({ range: "min", step:0.01, value: 30, min: 0, max: 60,
+	            	slide: function( event, ui ) { $( "#atpValue" ).val(ui.value); }
+	        });
+	        $( "#atpValue" ).val($("#atpSlider").slider("value"));
+        });
+
+        // RNA composition (5.9%)        
+        // DNA composition (6.7%)               
+        // Protein composition (48.0%)
+        // Carbohydrate composition (25.3%)        
+        // Fat composition (14.1% - but not produced, directly taken up)   
+        // BIOMASS SLIDER
+        $(function() {
+	        $( "#biomassSlider" ).slider({step:0.1, values: [48, 54.7, 60.6, 85.9], min: 0, max: 100,
+	            	slide: function( event, ui ) { 
+	            		$( "#proteinValue" ).val((ui.values[0]).toFixed(1));
+	            		$( "#dnaValue" ).val((ui.values[1] - ui.values[0]).toFixed(1));
+	            		$( "#rnaValue" ).val((ui.values[2] - ui.values[1]).toFixed(1));
+	            		$( "#carbValue" ).val((ui.values[3] - ui.values[2]).toFixed(1));
+	            		$( "#fatValue" ).val((100 - ui.values[3]).toFixed(1));
+	            	},
+	            	create: function( event, ui ) { 
+	            		$( "#proteinValue" ).val(48);
+	            		$( "#dnaValue" ).val(6.7);
+	            		$( "#rnaValue" ).val(5.9);
+	            		$( "#carbValue" ).val(25.3);
+	            		$( "#fatValue" ).val(14.1);
+	            	}	            	
+	        });
+        });
+        
+		$(function() {
+		    $( "#biomassBar" ).progressbar({
+		      value: 0
+		    });
+		});        
+    </script>
+	
+    <script type="text/javascript">
+        function jqueryAJAX() {
+            $.ajax({
+            	url: 'phpresponder.php',
+            	data: {
+            		glucose : $("#glucoseValue").val(), 
+            		dlactate : $("#llactateValue").val()/10, //d-lactate is produced at a tenth the rate of l-lactate (pfaller et al.)
+            		malate : $("#malateValue").val(), 
+            		glycerol : $("#glycerolValue").val(),
+            		llactate : $("#llactateValue").val(), 
+            		glutamine : $("#glutamineValue").val(),
+            		haemoglobin : $("#haemoglobinValue").val(),   
+            		atp : $("#atpValue").val(),
+            		protein : $("#proteinValue").val()/48,
+            		dna : $("#dnaValue").val()/6.7,
+            		rna : $("#rnaValue").val()/5.9,
+            		carb : $("#carbValue").val()/25.3,
+            		fat : $("#fatValue").val()/14.1,
+            		},
+            	success: function(response) {
+					$('.result').html(response);					
+					project(response);
+				}
+			});
+        }
+	</script>
+    
+	<script type="text/javascript">
+        function project(data) {         
+            var jsonfluxes = eval('(' + data + ')');			
+			$( "#biomassValue" ).val(jsonfluxes["MalariaBiomass_s (rc) C00020_c[757]"]);
+			$( "#biomassBar" ).progressbar( "value", jsonfluxes["MalariaBiomass_s (rc) C00020_c[757]"]*50 );
+			var mySVG = document.getElementById('mySVG');
+			var svg = mySVG.getSVGDocument();
+            edgecounter = 0;
+			for (edges in jsonfluxes) {						
+				svg.getElementById(edges).style.strokeWidth = 0.005*(8000-(8000/(1+(Math.abs(jsonfluxes[edges])))));
+				if (jsonfluxes[edges]*idealfluxes[edges] < 0) {
+					svg.getElementById(edges).style.stroke = "green";
+				}
+				if (jsonfluxes[edges]*idealfluxes[edges] >= 0) {
+					svg.getElementById(edges).style.stroke = "#3399ff";
+				}
+				if (edges.search("MalariaBiomass_s") != -1) {
+					svg.getElementById(edges).style.stroke = "red";
+				}
+				edgecounter++;
+			}
+        }
+	</script>
+	
+    <script type="text/javascript">
+        var idealfluxes = {
+	"CO2_mtoc_s (rc) C00011_c[533]" : -0.239816,
+	"R03316_m (rc) C00068_m" : 0.445811,
+	"glutamine_vtoc_s (rc) C00064_c[385]" : 0.174371,
+	"OHGbDigV_v (rc) C00183_v" : 0.0217963,
+	"C00086_b[695] (cr) Urea_btoc_s" : -1.12364,
+	"methionine_vtoc_s (rc) C00073_c[385]" : 0.217963,
+	"tyrosine_vtoc_s (rc) C00082_c[385]" : 0.261556,
+	"C00049_v (cr) aspartate_vtoc_s" : 0.65389,
+	"R00667_c (rc) C01165_c" : 1.12364,
+	"C00062_v (cr) arginine_vtoc_s" : 0.261556,
+	"C00002_c[290] (cr) R02331_c" : 0.015385,
+	"R01126_c (rc) C00294_c" : -0.134801,
+	"C00361_c (cr) R01857_c" : 0.015385,
+	"C00080_b[608] (cr) H_btoc_s" : 0.239199,
+	"C00037_c[737] (cr) MalariaBiomass_s" : 1.15232,
+	"C00006_c[517] (cr) R00115_c" : -0.0576522,
+	"R00405_m (rc) C00010_m[209]" : 0.445811,
+	"R00009_v (rc) C00007_v[374]" : 0.0217963,
+	"C00009_c[145] (cr) R00345_c" : -3.7554,
+	"C00025_c[525] (cr) R00894_c" : 0.18,
+	"glycine_btoc_s (rc) C00037_c[607]" : -0.60835,
+	"C00148_v (cr) proline_vtoc_s" : 0.610298,
+	"R01518_c (rc) C00631_c" : 63.7598,
+	"R04385_a (rc) C04419_a" : 0.00436171,
+	"R01528 (rc) C00011_c[49]" : 1.59337,
+	"C00002_c[292] (cr) R02094_c" : 0.063919,
+	"C00007_v[380] (cr) Oxygen_vtoc_s" : 0.0435927,
+	"C00003_c[123] (cr) R01061_c" : 63.7598,
+	"C00080_c[114] (cr) R00703_c" : 60,
+	"R01870_c (rc) C00119_c[279]" : -0.147652,
+	"O2_btoc_s (rc) C00007_c[627]" : 0.177459,
+	"R00355_c (rc) C00025_c" : -2.96301,
+	"C00097_c[738] (cr) MalariaBiomass_s" : 1.15232,
+	"R00243_c (rc) C00026_c[389]" : 0.125397,
+	"C00010_m[197] (cr) R00351_m" : 0.685627,
+	"R01016_c (rc) C00546_c" : 5.6,
+	"R01870_c (rc) C00295_c" : -0.147652,
+	"threonine_vtoc_s (rc) C00188_c[385]" : 0.697483,
+	"C00025_v (cr) glutamate_vtoc_s" : 0.523112,
+	"R00497_c (rc) C00009_c[527]" : 0.18,
+	"R00200_c (rc) C00022_c" : 60,
+	"C00342_c[271] (cr) R02016_c" : -0.158608,
+	"R00939_c (rc) C00005_c[647]" : -0.063919,
+	"R02017_c (rc) C00343_c[345]" : 0.063919,
+	"C00008_c[357] (cr) R00124_c" : -500,
+	"R01830 (rc) C00231_c" : -0.436973,
+	"R02019_c (rc) C00361_c" : 0.015385,
+	"C00188_v (cr) threonine_vtoc_s" : 0.697483,
+	"R01786_c (rc) C00668_c" : 19.24,
+	"C00001_m[544] (cr) H2O_mtoc_s" : 0.239816,
+	"C00275_c (cr) R01818" : 1.63418,
+	"C00275_c (cr) R01819" : -1.63418,
+	"C00286_c[743] (cr) MalariaBiomass_s" : 1.15232,
+	"R00200_a (rc) C00002_a[139]" : 0.00436171,
+	"R00267_m (rc) C00026_m" : -0.685627,
+	"R00497_c (rc) C00008_c[524]" : 0.18,
+	"C00049_c[728] (cr) MalariaBiomass_s" : 1.15232,
+	"Glutamine_btoc_s (rc) C00064_c" : 0.98,
+	"OHGbDigV_v (rc) C00079_v" : 0.0217963,
+	"R01325_m (rc) C00001_m[200]" : -0.685627,
+	"R02325_c (rc) C00014_c[298]" : -0.015385,
+	"C00002_c[652] (cr) R00575_balanced_c" : 0.147652,
+	"C00001_c[261] (cr) R02018_c" : -0.0793039,
+	"C00006_c[48] (cr) R01528" : 1.59337,
+	"C00148_c[736] (cr) MalariaBiomass_s" : 1.15232,
+	"SFAE_a (rc) C00001_a[776]" : 0.00436171,
+	"C05345_c (cr) R01830" : -0.436973,
+	"C00064_c[750] (cr) MalariaBiomass_s" : 1.15232,
+	"C15972_m (cr) R03316_m" : 0.445811,
+	"C00051_c[527] (cr) R00274_c" : 0.147652,
+	"R00345_c (rc) C00074_c" : -3.7554,
+	"C00036_m (cr) R00342_m" : 0.685627,
+	"C00047_b[620] (cr) lysine_btoc_s" : -0.407394,
+	"C00025_c[396] (cr) R00243_c" : 0.125397,
+	"R02035 (rc) C00345_c" : 1.59337,
+	"C00074_c (cr) PEP_ctoa_s" : 0.00436171,
+	"R02325_c (rc) C00460_c" : -0.015385,
+	"R00275_v (rc) C00027_v" : 0.0435927,
+	"C05125_a (cr) R03270_a" : 0.00436171,
+	"C05382_c (cr) R01641" : -0.436973,
+	"R00330_c (rc) C00008_c[362]" : 11.0602,
+	"C00003_c[780] (cr) R00112_c" : 1.96342,
+	"R01867_c (rc) C00295_c" : 0.147652,
+	"H2O_mtoc_s (rc) C00001_c[545]" : 0.239816,
+	"R02736 (rc) C00080_c[54]" : 1.59337,
+	"OHGbDigV_v (rc) C00037_v" : 0.0217963,
+	"C00006_c[272] (cr) R02016_c" : -0.158608,
+	"C00001_c[319] (cr) R01130_c" : 0.0247896,
+	"R02019_c (rc) C00001_c[349]" : 0.015385,
+	"C00117_c (cr) R01049" : 0.147652,
+	"C00118_c (cr) R01827" : 0.436973,
+	"C00036_c (cr) R00342_c" : 0.792386,
+	"H_atoc_s (rc) C00080_c[563]" : -0.00872342,
+	"C00068_a (cr) R00014_a" : 0.00436171,
+	"C00041_c[739] (cr) MalariaBiomass_s" : 1.15232,
+	"tryptophan_vtoc_s (rc) C00078_c[385]" : 0.130778,
+	"R00658_c (rc) C00001_c[151]" : 63.7598,
+	"C00262_b (cr) Hypoxanthine_btoc_s" : 0.134801,
+	"C00001_c[296] (cr) R01993_c" : -0.147652,
+	"C00010_m[196] (cr) R02570_m" : 0.445811,
+	"phenylalanine_btoc_s (rc) C00079_c[631]" : -0.435134,
+	"R00156_c (rc) C00008_c[283]" : 0.0683483,
+	"C00111_c (cr) R00842_c" : 2.88419,
+	"R00093_c (rc) C00064_c[396]" : -0.833326,
+	"glycine_vtoc_s (rc) C00037_c[385]" : 0.871854,
+	"R03321_c (rc) C05345_c" : -463.113,
+	"C00101_c (cr) R00939_c" : -0.063919,
+	"SFAE_a (rc) C00011_a[774]" : 0.00436171,
+	"C00118_c (cr) R01830" : -0.436973,
+	"R05692 (rc) C00005_c[93]" : -0.17976,
+	"C00083_a (cr) SFAE_a" : 0.00436171,
+	"C00117_c (cr) R01056" : -0.719426,
+	"C00009_m[554] (cr) Pi_mtoc_s" : -0.445811,
+	"C00006_c[646] (cr) R00939_c" : -0.063919,
+	"R01529 (rc) C00231_c" : 0.873945,
+	"R00243_c (rc) C00004_c[488]" : 0.125397,
+	"Hydrogen_vtoc_s (rc) C00080_c[379]" : -0.0871854,
+	"C00025_c[726] (cr) MalariaBiomass_s" : 1.15232,
+	"Lmal_mtoc_s (rc) C00149_c" : 1.13144,
+	"alanine_vtoc_s (rc) C00041_c[385]" : 1.56934,
+	"C00073_b[622] (cr) methionine_btoc_s" : -0.113341,
+	"R00181_c (rc) C00014_c[337]" : -0.110012,
+	"R00267_m (rc) C00011_m[187]" : -0.685627,
+	"phenylalanine_vtoc_s (rc) C00079_c[385]" : 0.65389,
+	"FADH2_mtoc_s (rc) C01352_c[537]" : 0.445811,
+	"R00945_c (rc) C00065_c" : -0.063919,
+	"C00001_c[307] (cr) R00573_c" : 0.0154467,
+	"C00123_b[618] (cr) Leucine_btoc_s" : -1.18414,
+	"C16254_m (cr) R02570_m" : 0.445811,
+	"R01863_c (rc) C00262_c" : -0.134801,
+	"R01900_m (rc) C00311_m" : -0.685627,
+	"C00620_c (cr) R01057" : -0.134801,
+	"C00080_c[759] (cr) R02222_generalised_c" : 0.0733994,
+	"C00062_c (cr) R00551_c" : 1.12364,
+	"C00221_c (cr) R01600_c" : 19.24,
+	"NADP_mtoc_s (rc) C00006_c[551]" : 0.685627,
+	"C00013_b[632] (cr) PPi_btoc_s" : -6.8077,
+	"R02222_generalised_c (rc) DesatFA_c" : 0.0733994,
+	"R00551_c (rc) C00086_c[395]" : 1.12364,
+	"C00020_c (cr) R00127_c" : 4.99546,
+	"C00027_v (cr) R00009_v" : 0.0217963,
+	"R00408_m (rc) C00122_m" : 0.445811,
+	"tryptophan_btoc_s (rc) C00078_c[641]" : -0.107,
+	"C00062_b[592] (cr) arginine_btoc_s" : 1,
+	"C00015_c (cr) R00156_c" : 0.0683483,
+	"OHGbDigV_v (rc) C00062_v" : 0.0217963,
+	"C01352_c[181] (cr) R00848_c" : 0.445811,
+	"C00049_c (cr) R00355_c" : -2.96301,
+	"R01600_c (rc) C01172_c" : 19.24,
+	"R02331_c (rc) C00008_c[291]" : 0.015385,
+	"C00001_a[564] (cr) H2O_atoc_s" : 0.00436171,
+	"C00026_c (cr) OG_ctom_s" : 1.13144,
+	"C00005_c[779] (cr) R00112_c" : 1.96342,
+	"R01857_c (rc) C00286_c" : 0.015385,
+	"Hypoxanthine_btoc_s (rc) C00262_c" : 0.134801,
+	"C00002_c[280] (cr) R00158_c" : 0.147652,
+	"C00080_c[120] (cr) R00842_c" : 2.88419,
+	"R01130_c (rc) C00004_c[320]" : 0.0247896,
+	"R00351_m (rc) C00036_m" : 0.685627,
+	"C00364_c (cr) R02094_c" : 0.063919,
+	"C00008_c[344] (cr) R02017_c" : 0.063919,
+	"C00047_c[724] (cr) MalariaBiomass_s" : 1.15232,
+	"C00118_c (cr) R01061_c" : 63.7598,
+	"C00001_v[383] (cr) H2O_vtoc_s" : 0.0435927,
+	"C05382_c (cr) R01827" : 0.436973,
+	"OHGbDigV_v (rc) C00135_v" : 0.0217963,
+	"R02101_c (rc) C00415_c" : 0.063919,
+	"R03314_c (rc) C03912_c" : 1.12364,
+	"R07618_m (rc) C00080_m[195]" : 0.445811,
+	"cysteine_btoc_s (rc) C00097_c[601]" : 0.134822,
+	"C00288_a[251] (cr) R04385_a" : 0.00436171,
+	"C00669_c (cr) R00497_c" : 0.18,
+	"C00668_c (cr) R02740_c" : 500,
+	"C00199_c (cr) R01529" : 0.873945,
+	"R00243_c (rc) C00014_c[487]" : 0.125397,
+	"R00093_c[1] (rc) C00080_c[900]" : -0.833326,
+	"Pi_atoc_s (rc) C00009_c[577]" : 0.00436171,
+	"OHGbDigV_v (rc) C00097_v" : 0.0217963,
+	"R03270_a (rc) C00068_a" : 0.00436171,
+	"C00183_c[733] (cr) MalariaBiomass_s" : 1.15232,
+	"R02018_c (rc) C00015_c" : -0.0793039,
+	"C00007_c[758] (cr) R02222_generalised_c" : 0.0733994,
+	"threonine_btoc_s (rc) C00188_c[639]" : -0.497749,
+	"C00005_a[574] (cr) NADPH_atoc_s" : -0.00436171,
+	"R08539_balanced_c (rc) C00999_c" : 0.0733994,
+	"R05692 (rc) C01222_c" : -0.17976,
+	"R00115_c (rc) C00080_c[519]" : -0.0576522,
+	"R00267_m (rc) C00080_m[189]" : -0.685627,
+	"C00001_c[423] (cr) R00945_c[374]" : -0.063919,
+	"R01736_c (rc) C00051_c" : 5.6,
+	"C00079_b[630] (cr) phenylalanine_btoc_s" : -0.435134,
+	"C00152_v (cr) asparagine_vtoc_s" : 0.435927,
+	"SFAE_a (rc) C00010_a[775]" : 0.00436171,
+	"lysine_btoc_s (rc) C00047_c[621]" : -0.407394,
+	"ATP_mtoc_s (rc) C00002_c[531]" : 0.445811,
+	"OHGbDigV_v (rc) C00047_v" : 0.0217963,
+	"C00082_c[727] (cr) MalariaBiomass_s" : 1.15232,
+	"C00063_c[745] (cr) MalariaBiomass_s" : 1.15232,
+	"GSSG_btoc_s (rc) C00127_c" : -0.09,
+	"R04385_a (rc) C00009_a[253]" : 0.00436171,
+	"R02094_c (rc) C00363_c" : 0.063919,
+	"C00004_a[773] (cr) SFAE_a" : 0.00436171,
+	"C00047_v (cr) lysine_vtoc_s" : 0.959039,
+	"R02018_c (rc) C00342_c[262]" : -0.0793039,
+	"R00355_c (rc) C00036_c" : -2.96301,
+	"C00127_b (cr) GSSG_btoc_s" : -0.09,
+	"C00002_a[250] (cr) R04385_a" : 0.00436171,
+	"R01137_c (rc) C00131_c" : 0.063919,
+	"valine_vtoc_s (rc) C00183_c[385]" : 1.35137,
+	"R02739_c (rc) C01172_c" : -480.76,
+	"R00965_c (rc) C00011_c[301]" : 0.147652,
+	"C00064_b (cr) Glutamine_btoc_s" : 0.98,
+	"C00008_a[138] (cr) R00200_a" : 0.00436171,
+	"R00342_m (rc) C00003_m[185]" : 0.685627,
+	"C00001_c[297] (cr) R02325_c" : -0.015385,
+	"R02736 (rc) C01236_c" : 1.59337,
+	"ADP_mtoc_s (rc) C00008_c[529]" : -0.445811,
+	"OHGbDigV_v (rc) C00152_v" : 0.0217963,
+	"C00183_v (cr) valine_vtoc_s" : 1.35137,
+	"R02736 (rc) C00005_c[53]" : 1.59337,
+	"C00022_a (cr) R00014_a" : 0.00436171,
+	"C00325_c (cr) R05692" : -0.17976,
+	"H_btoc_s (rc) C00080_c[609]" : 0.239199,
+	"NADPH_mtoc_s (rc) C00005_c[553]" : -0.685627,
+	"R00093_c (rc) C00004_c[483]" : -0.833326,
+	"C01708_b (cr) Hemoglobin_btov_s" : 0.0217963,
+	"C00009_b[628] (cr) P_btoc_s" : 13.8887,
+	"C00130_c (cr) R01130_c" : 0.0247896,
+	"R01126_c (rc) C00009_c[333]" : -0.134801,
+	"C00149_m (cr) R01082_m" : -0.445811,
+	"R01061_c (rc) C00004_c[124]" : 63.7598,
+	"aspartate_btoc_s (rc) C00049_c[597]" : -3.18392,
+	"C00135_c[734] (cr) MalariaBiomass_s" : 1.15232,
+	"C00075_c (cr) R00573_c" : 0.0154467,
+	"C00064_c[339] (cr) R01231_c" : 0.0247896,
+	"C00001_c[276] (cr) R00945_c" : -0.063919,
+	"SFAE_a (rc) FAC2H4unit_a" : 0.00436171,
+	"P_btoc_s (rc) C00009_c[629]" : 13.8887,
+	"C00143_c[389] (cr) R00945_c[374]" : -0.063919,
+	"R00573_c (rc) C00009_c[309]" : 0.0154467,
+	"R01528 (rc) C00080_c[51]" : 1.59337,
+	"R00848_c (rc) C00016_c[182]" : 0.445811,
+	"C00002_c[355] (cr) R00127_c" : 4.99546,
+	"C00004_c[119] (cr) R00842_c" : 2.88419,
+	"C00002_c[132] (cr) R01786_c" : 19.24,
+	"R00093_c (rc) C00026_c[389]" : -0.833326,
+	"arginine_btoc_s (rc) C00062_c[593]" : 1,
+	"CO2_btoc_s (rc) C00011_c[599]" : 2.24547,
+	"GenAcetylation_m (rc) AcCmpd_m" : 0.685627,
+	"C00008_c[140] (cr) R00200_c" : 60,
+	"C00002_c[358] (cr) R00124_c" : -500,
+	"Hemozoin_b (cr) Hemozoin_btov_s" : -0.0871854,
+	"C00135_b[614] (cr) histidine_btoc_s" : -0.723639,
+	"C00236_c (cr) R01512_c" : 63.7598,
+	"R00330_c (rc) C00044_c" : 11.0602,
+	"R07618_a (rc) C15972_a" : 0.00436171,
+	"C00256_b (cr) Rlactate_btoc_s" : -5.6,
+	"R00842_c (rc) C00093_c" : 2.88419,
+	"C00073_v (cr) methionine_vtoc_s" : 0.217963,
+	"C00152_b[594] (cr) asparagine_btoc_s" : 0.144252,
+	"R00573_c (rc) C00063_c" : 0.0154467,
+	"C00458_c[741] (cr) MalariaBiomass_s" : 1.15232,
+	"R04385_a (rc) C00008_a[252]" : 0.00436171,
+	"C00091_m (cr) R00405_m" : 0.445811,
+	"OHGbDigV_v (rc) C00064_v" : 0.0217963,
+	"C00096_c (cr) R00888" : 0.17976,
+	"C15973_m (cr) R07618_m" : 0.445811,
+	"C00079_c[729] (cr) MalariaBiomass_s" : 1.15232,
+	"C00636_c (cr) R00885" : 1.63418,
+	"C00149_b (cr) Lmal_btoc_s" : -1.92382,
+	"C00024_a (cr) R04386_balanced_a" : 0.00436171,
+	"glutamate_btoc_s (rc) C00025_c[603]" : 0.1,
+	"HCO3_btoc_s (rc) C00288_c[613]" : 0.152014,
+	"MalariaBiomass_s (rc) C00035_c[754]" : 1.15232,
+	"MalariaBiomass_s (rc) C00013_c[755]" : 1.15232,
+	"C00077_c (cr) R00667_c" : 1.12364,
+	"C00008_m[206] (cr) R00405_m" : 0.445811,
+	"C00337_c (cr) R01867_c" : 0.147652,
+	"R01057 (rc) C00117_c" : -0.134801,
+	"C00026_c[389] (cr) R00667_c" : 1.12364,
+	"C00149_m (cr) Lmal_mtoc_s" : 1.13144,
+	"C00267_c (cr) R01786_c" : 19.24,
+	"C00005_a[772] (cr) SFAE_a" : 0.00436171,
+	"R01736_c (rc) C00256_c" : 5.6,
+	"C00009_m[207] (cr) R00405_m" : 0.445811,
+	"C00036_c (cr) R00345_c" : -3.7554,
+	"R01857_c (rc) C00008_c[366]" : 0.015385,
+	"C00002_c[130] (cr) R01600_c" : 19.24,
+	"R02093_c (rc) C00008_c[287]" : 0.063919,
+	"C00025_c[396] (cr) R00093_c" : -0.833326,
+	"R01248_c (rc) C03912_c" : -1.12364,
+	"CO2_atoc_s (rc) C00011_c[561]" : 0.00872342,
+	"lysine_vtoc_s (rc) C00047_c[385]" : 0.959039,
+	"ADG_btoc_s (rc) C00267_c" : 19.24,
+	"R01049 (rc) C00119_c" : 0.147652,
+	"R00342_c (rc) C00003_c[118]" : 0.792386,
+	"HCO3_atoc_s (rc) C00288_c[567]" : -0.00436171,
+	"C00002_c[134] (cr) R04779_c" : 36.1264,
+	"C00080_a[771] (cr) SFAE_a" : 0.00436171,
+	"R01867_c (rc) C00027_c[270]" : 0.147652,
+	"C00080_m[542] (cr) H_mtoc_s" : -0.925442,
+	"PPi_btoc_s (rc) C00013_c[633]" : -6.8077,
+	"C00001_c[340] (cr) R01231_c" : 0.0247896,
+	"R00351_m (rc) C00001_m[198]" : 0.685627,
+	"C00001_c[57] (cr) R02035" : 1.59337,
+	"R01015_c (rc) C00111_c" : -27.1964,
+	"R00945_c[374] (rc) C00065_c[389]" : -0.063919,
+	"C00080_v[378] (cr) Hydrogen_vtoc_s" : -0.0871854,
+	"R00847_c (rc) C00008_c[137]" : -3.33,
+	"R00703_c (rc) C00003_c[115]" : 60,
+	"R00888 (rc) C00001_c[100]" : 0.17976,
+	"C00008_m[528] (cr) ADP_mtoc_s" : -0.445811,
+	"C00343_c[260] (cr) R02018_c" : -0.0793039,
+	"R00355_c[374] (rc) C00025_c[396]" : -2.96301,
+	"C00288_b[612] (cr) HCO3_btoc_s" : 0.152014,
+	"R00573_c (rc) C00008_c[308]" : 0.0154467,
+	"asparagine_btoc_s (rc) C00152_c[595]" : 0.144252,
+	"R00200_a (rc) C00022_a" : 0.00436171,
+	"C00065_b[636] (cr) serine_btoc_s" : -0.333963,
+	"R01819 (rc) C05345_c" : -1.63418,
+	"R00408_m (rc) C01352_m[192]" : 0.445811,
+	"R00405_m (rc) C00042_m" : 0.445811,
+	"C00996_c (cr) R08539_balanced_c" : 0.0733994,
+	"C00407_b[616] (cr) isoleucine_btoc_s" : 0.442268,
+	"R01528 (rc) C00199_c" : 1.59337,
+	"R01641 (rc) C00117_c" : -0.436973,
+	"R01397_c (rc) C00438_c" : 0.147652,
+	"AcCmpd_m[721] (cr) MalariaBiomass_s" : 1.15232,
+	"C00007_b[626] (cr) O2_btoc_s" : 0.177459,
+	"C00159_c[752] (cr) MalariaBiomass_s" : 1.15232,
+	"C00073_c[735] (cr) MalariaBiomass_s" : 1.15232,
+	"R00621_m (rc) C00011_m[190]" : 0.445811,
+	"OHGbDigV_v (rc) C00704_v" : 0.0217963,
+	"R00355_c[374] (rc) C00036_c[389]" : -2.96301,
+	"C00035_c (cr) R00330_c" : 11.0602,
+	"C00001_m[201] (cr) R01900_m" : -0.685627,
+	"C00188_b[638] (cr) threonine_btoc_s" : -0.497749,
+	"C00082_v (cr) tyrosine_vtoc_s" : 0.261556,
+	"R01231_c (rc) C00020_c" : 0.0247896,
+	"H2O_btoc_s (rc) C00001_c[611]" : -23.1411,
+	"OHGbDigV_v (rc) C00188_v" : 0.0217963,
+	"R00342_m (rc) C00149_m" : 0.685627,
+	"C00004_c[116] (cr) R00342_c" : 0.792386,
+	"OHGbDigV_v (rc) C00073_v" : 0.0217963,
+	"OHGbDigV_v (rc) C00065_v" : 0.0217963,
+	"R01082_m (rc) C00122_m" : -0.445811,
+	"Oxygen_vtoc_s (rc) C00007_c[381]" : 0.0435927,
+	"C00325_c[749] (cr) MalariaBiomass_s" : 1.15232,
+	"C00068_m (cr) R00621_m" : 0.445811,
+	"OHGbDigV_v (rc) C00049_v" : 0.0217963,
+	"C00655_c (cr) R01231_c" : 0.0247896,
+	"C00006_c[92] (cr) R05692" : -0.17976,
+	"C00049_b[596] (cr) aspartate_btoc_s" : -3.18392,
+	"H2O_atoc_s (rc) C00001_c[565]" : 0.00436171,
+	"R00274_c (rc) C00127_c" : 0.147652,
+	"C00074_c (cr) R00200_c" : 60,
+	"R00703_c (rc) C00186_c" : 60,
+	"R07618_a (rc) C00080_a[129]" : 0.00436171,
+	"C00002_c[367] (cr) R00332_c" : 0.0247896,
+	"C01172_c (cr) R03321_c" : -463.113,
+	"R01231_c (rc) C00025_c[342]" : 0.0247896,
+	"R00342_c (rc) C00149_c" : 0.792386,
+	"valine_btoc_s (rc) C00183_c[645]" : -1.1564,
+	"alanine_btoc_s (rc) C00041_c[591]" : -1.4552,
+	"C00003_c[485] (cr) R00243_c" : 0.125397,
+	"R00945_c[374] (rc) C00101_c[389]" : -0.063919,
+	"C00267_b (cr) ADG_btoc_s" : 19.24,
+	"R00156_c (rc) C00075_c" : 0.0683483,
+	"C00002_c (cr) R01231_c" : 0.0247896,
+	"R00575_balanced_c (rc) C00025_c[659]" : 0.147652,
+	"C00097_c[527] (cr) R00894_c" : 0.18,
+	"R00842_c (rc) C00003_c[121]" : 2.88419,
+	"R02017_c (rc) C00001_c[346]" : 0.063919,
+	"C01708_v (cr) R03682_v" : 0.0217963,
+	"R01786_c (rc) C00008_c[133]" : 19.24,
+	"C04419_a (cr) R04386_balanced_a" : 0.00436171,
+	"C00148_b[634] (cr) proline_btoc_s" : -1.62932,
+	"R02017_c (rc) C00206_c" : 0.063919,
+	"R01016_c (rc) C00009_c[152]" : 5.6,
+	"R04779_c (rc) C05378_c" : 36.1264,
+	"C05781_v (cr) OHGbDigV_v" : 0.0217963,
+	"proline_vtoc_s (rc) C00148_c[385]" : 0.610298,
+	"C00013_c[278] (cr) R01870_c" : -0.147652,
+	"R02016_c (rc) C00080_c[275]" : -0.158608,
+	"R00158_c (rc) C00008_c[281]" : 0.147652,
+	"R01061_c (rc) C00236_c" : 63.7598,
+	"C16255_a (cr) R02569_a" : -0.00436171,
+	"C00002_c[282] (cr) R00156_c" : 0.0683483,
+	"C00148_c (cr) R01248_c" : -1.12364,
+	"R00667_c (rc) C00025_c[396]" : 1.12364,
+	"C00152_c[723] (cr) MalariaBiomass_s" : 1.15232,
+	"C00288_c[654] (cr) R00575_balanced_c" : 0.147652,
+	"R02570_m (rc) C15973_m" : 0.445811,
+	"histidine_btoc_s (rc) C00135_c[615]" : -0.723639,
+	"C00458_c (cr) R02325_c" : -0.015385,
+	"C00144_c (cr) R00332_c" : 0.0247896,
+	"SFAE_a (rc) C00006_a[778]" : 0.00436171,
+	"R01231_c (rc) C00144_c" : 0.0247896,
+	"R00885 (rc) C00096_c" : 1.63418,
+	"R03316_m (rc) C16254_m" : 0.445811,
+	"C00009_c[324] (cr) R01863_c" : -0.134801,
+	"R01512_c (rc) C00197_c" : 63.7598,
+	"C00007_c[269] (cr) R01867_c" : 0.147652,
+	"R04386_balanced_a (rc) C06250_a" : 0.00436171,
+	"cysteine_vtoc_s (rc) C00097_c[385]" : 0.130778,
+	"R01993_c (rc) C00438_c" : -0.147652,
+	"C01236_c (cr) R02035" : 1.59337,
+	"R00014_a (rc) C05125_a" : 0.00436171,
+	"C00080_a[254] (cr) R04386_balanced_a" : 0.00436171,
+	"R01512_c (rc) C00002_c[143]" : 63.7598,
+	"R01070_c (rc) C00118_c" : 36.1264,
+	"R03682_v (rc) C05781_v" : 0.0217963,
+	"C00206_c (cr) R01137_c" : 0.063919,
+	"R01231_c (rc) C00013_c[341]" : 0.0247896,
+	"C00037_c (cr) R00945_c" : -0.063919,
+	"R01641 (rc) C00231_c" : -0.436973,
+	"OHGbDigV_v (rc) C00082_v" : 0.0217963,
+	"C00051_c (cr) R02530_c" : -5.6,
+	"R00112_c (rc) C00006_c[781]" : 1.96342,
+	"C00009_a[576] (cr) Pi_atoc_s" : 0.00436171,
+	"leucine_vtoc_s (rc) C00123_c[385]" : 1.56934,
+	"R01528 (rc) C00005_c[50]" : 1.59337,
+	"R00127_c (rc) C00008_c[356]" : 4.99546,
+	"C00026_c[389] (cr) R00355_c[374]" : -2.96301,
+	"R04779_c (rc) C00008_c[135]" : 36.1264,
+	"R02569_a (rc) C15973_a" : -0.00436171,
+	"R01830 (rc) C00279_c" : -0.436973,
+	"C00005_c[764] (cr) R08539_balanced_c" : 0.0733994,
+	"R01248_c (rc) C00004_c[389]" : -1.12364,
+	"C00169_c (cr) R01397_c" : 0.147652,
+	"R00115_c (rc) C00005_c[518]" : -0.0576522,
+	"R00267_m (rc) C00005_m[188]" : -0.685627,
+	"MalariaBiomass_s (rc) C00009_c[756]" : 1.15232,
+	"C00097_b[600] (cr) cysteine_btoc_s" : 0.134822,
+	"Leucine_btoc_s (rc) C00123_c[619]" : -1.18414,
+	"R01049 (rc) C00020_c[56]" : 0.147652,
+	"R00345_c (rc) C00001_c[146]" : -3.7554,
+	"C00011_a[560] (cr) CO2_atoc_s" : 0.00872342,
+	"C00002_c[747] (cr) MalariaBiomass_s" : 1.15232,
+	"R00405_m (rc) C00002_m[208]" : 0.445811,
+	"C00002_c[136] (cr) R00847_c" : -3.33,
+	"C00002_c[520] (cr) R00894_c" : 0.18,
+	"C00183_b[644] (cr) valine_btoc_s" : -1.1564,
+	"C01165_c (cr) R03314_c" : 1.12364,
+	"FAC2H4unit_a[751] (cr) MalariaBiomass_s" : 1.15232,
+	"R02530_c (rc) C03451_c" : -5.6,
+	"R00115_c (rc) C00127_c" : -0.0576522,
+	"R02094_c (rc) C00008_c[293]" : 0.063919,
+	"C01346_c (cr) R02331_c" : 0.015385,
+	"C05378_c (cr) R01070_c" : 36.1264,
+	"NADH_mtoc_s (rc) C00004_c[549]" : -0.239816,
+	"OHGbDigV_v (rc) C00032_v" : 0.0217963,
+	"C00065_v (cr) serine_vtoc_s" : 0.697483,
+	"OG_ctom_s (rc) C00026_m" : 1.13144,
+	"C00417_m (cr) R01900_m" : -0.685627,
+	"R01827 (rc) C05345_c" : 0.436973,
+	"Lmal_btoc_s (rc) C00149_c" : -1.92382,
+	"R02019_c (rc) C00343_c[348]" : 0.015385,
+	"DesatFA_c[753] (cr) MalariaBiomass_s" : 1.15232,
+	"C00049_c (cr) R01397_c" : 0.147652,
+	"C00004_m[183] (cr) R00342_m" : 0.685627,
+	"C00025_c (cr) R00093_c[1]" : -0.833326,
+	"C00006_a[572] (cr) NADP_atoc_s" : 0.00436171,
+	"C00006_c[52] (cr) R02736" : 1.59337,
+	"C00003_a[127] (cr) R07618_a" : 0.00436171,
+	"R01818 (rc) C00636_c" : 1.63418,
+	"R02098_c (rc) C00008_c[295]" : -0.063919,
+	"R02222_generalised_c (rc) C00001_c[760]" : 0.0733994,
+	"C03451_c (cr) R01736_c" : 5.6,
+	"histidine_vtoc_s (rc) C00135_c[385]" : 0.828261,
+	"C00294_c (cr) R01863_c" : -0.134801,
+	"proline_btoc_s (rc) C00148_c[635]" : -1.62932,
+	"NADP_atoc_s (rc) C00006_c[573]" : 0.00436171,
+	"R00497_c (rc) C00051_c[527]" : 0.18,
+	"glutamate_vtoc_s (rc) C00025_c[385]" : 0.523112,
+	"C00078_v (cr) tryptophan_vtoc_s" : 0.130778,
+	"R00181_c (rc) C00130_c" : -0.110012,
+	"C00118_c (cr) R01015_c" : -27.1964,
+	"C00197_c (cr) R01518_c" : 63.7598,
+	"R01863_c (rc) C00620_c[325]" : -0.134801,
+	"R07618_m (rc) C00004_m[194]" : 0.445811,
+	"H2O_vtoc_s (rc) C00001_c[384]" : 0.0435927,
+	"C00005_m[552] (cr) NADPH_mtoc_s" : -0.685627,
+	"C00002_m[530] (cr) ATP_mtoc_s" : 0.445811,
+	"R00124_c (rc) C00002_c[359]" : -500,
+	"C00342_c[343] (cr) R02017_c" : 0.063919,
+	"Urea_btoc_s (rc) C00086_c[696]" : -1.12364,
+	"C00123_v (cr) leucine_vtoc_s" : 1.56934,
+	"C00143_c (cr) R00945_c" : -0.063919,
+	"C00001_c[332] (cr) R01126_c" : -0.134801,
+	"C00158_m (cr) R00351_m" : 0.685627,
+	"C00631_c (cr) R00658_c" : 63.7598,
+	"C01103_c (cr) R01870_c" : -0.147652,
+	"C00062_c[731] (cr) MalariaBiomass_s" : 1.15232,
+	"C00097_v (cr) cysteine_vtoc_s" : 0.130778,
+	"C00001_c[394] (cr) R00551_c" : 1.12364,
+	"R00575_balanced_c (rc) C00169_c" : 0.147652,
+	"C00011_m[532] (cr) CO2_mtoc_s" : -0.239816,
+	"C00064_c[306] (cr) R00573_c" : 0.0154467,
+	"C00186_b (cr) Slactate_btoc_s" : -60,
+	"C00288_a[566] (cr) HCO3_atoc_s" : -0.00436171,
+	"C00009_c[122] (cr) R01061_c" : 63.7598,
+	"R01397_c (rc) C00009_c[277]" : 0.147652,
+	"R00621_m (rc) C05381_m" : 0.445811,
+	"C00079_v (cr) phenylalanine_vtoc_s" : 0.65389,
+	"C00001_c[655] (cr) R00575_balanced_c" : 0.147652,
+	"R00014_a (rc) C00011_a[126]" : 0.00436171,
+	"OHGbDigV_v (rc) C00148_v" : 0.0217963,
+	"R00093_c[1] (rc) C00004_c[900]" : -0.833326,
+	"C00051_c[527] (cr) R00115_c" : -0.0576522,
+	"R00847_c (rc) C00093_c" : -3.33,
+	"C00008_c[142] (cr) R01512_c" : 63.7598,
+	"C00111_c (cr) R00848_c" : 0.445811,
+	"OHGbDigV_v (rc) C00041_v" : 0.0217963,
+	"C00080_c[117] (cr) R00342_c" : 0.792386,
+	"C00002_c[286] (cr) R02093_c" : 0.063919,
+	"C00002_c[361] (cr) R00330_c" : 11.0602,
+	"H_mtoc_s (rc) C00080_c[543]" : -0.925442,
+	"R00243_c (rc) C00080_c[489]" : 0.125397,
+	"OHGbDigV_v (rc) C00025_v" : 0.0217963,
+	"BDG_btoc_s (rc) C00221_c" : 19.24,
+	"C00130_c (cr) R01126_c" : -0.134801,
+	"Hemoglobin_btov_s (rc) C01708_v" : 0.0217963,
+	"C00188_c[732] (cr) MalariaBiomass_s" : 1.15232,
+	"C00078_c[740] (cr) MalariaBiomass_s" : 1.15232,
+	"R00939_c (rc) C00080_c[648]" : -0.063919,
+	"R00885 (rc) C00013_c" : 1.63418,
+	"C00027_c[527] (cr) R00274_c" : 0.147652,
+	"R08539_balanced_c (rc) C00080_c[766]" : 0.0733994,
+	"C00003_m[546] (cr) NAD_mtoc_s" : 0.239816,
+	"R02093_c (rc) C00459_c" : 0.063919,
+	"R00939_c (rc) C00415_c" : -0.063919,
+	"C00049_c[396] (cr) R00355_c[374]" : -2.96301,
+	"R00009_v (rc) C00001_v[375]" : 0.0217963,
+	"C00044_c[748] (cr) MalariaBiomass_s" : 1.15232,
+	"C00024_m (cr) GenAcetylation_m" : 0.685627,
+	"R00894_c (rc) C00009_c[522]" : 0.18,
+	"C00407_c[725] (cr) MalariaBiomass_s" : 1.15232,
+	"R02098_c (rc) C01346_c" : -0.063919,
+	"C00020_c (cr) R00181_c" : -0.110012,
+	"R00200_c (rc) C00002_c[141]" : 60,
+	"R00575_balanced_c (rc) C00009_c[658]" : 0.147652,
+	"C00075_c[746] (cr) MalariaBiomass_s" : 1.15232,
+	"C00026_m (cr) R00621_m" : 0.445811,
+	"R00124_c (rc) C00008_c[360]" : -500,
+	"C00002_c[363] (cr) R01137_c" : 0.063919,
+	"C15972_a (cr) R03270_a" : 0.00436171,
+	"C00345_c (cr) R01528" : 1.59337,
+	"R00345_c (rc) C00011_c[147]" : -3.7554,
+	"R00658_c (rc) C00074_c" : 63.7598,
+	"FAD_mtoc_s (rc) C00016_c[535]" : -0.445811,
+	"R02101_c (rc) C00364_c" : 0.063919,
+	"R00332_c (rc) C00008_c[368]" : 0.0247896,
+	"C00064_c[653] (cr) R00575_balanced_c" : 0.147652,
+	"C00003_c[481] (cr) R00093_c" : -0.833326,
+	"C00080_a[562] (cr) H_atoc_s" : -0.00872342,
+	"C00037_c[389] (cr) R00945_c[374]" : -0.063919,
+	"R01130_c (rc) C00080_c[321]" : 0.0247896,
+	"serine_vtoc_s (rc) C00065_c[385]" : 0.697483,
+	"aspartate_vtoc_s (rc) C00049_c[385]" : 0.65389,
+	"C00004_c[113] (cr) R00703_c" : 60,
+	"C00365_c (cr) R02101_c" : 0.063919,
+	"Pi_mtoc_s (rc) C00009_c[555]" : -0.445811,
+	"C00116_b (cr) Glycerol_btoc_s" : -3.33,
+	"C00311_m (cr) R00267_m" : -0.685627,
+	"C00080_c[656] (cr) R00575_balanced_c" : 0.147652,
+	"C00011_b[598] (cr) CO2_btoc_s" : 2.24547,
+	"NADPH_atoc_s (rc) C00005_c[575]" : -0.00436171,
+	"C00016_m[534] (cr) FAD_mtoc_s" : -0.445811,
+	"C00037_v (cr) glycine_vtoc_s" : 0.871854,
+	"C00999_c (cr) R02222_generalised_c" : 0.0733994,
+	"C00026_c (cr) R00355_c" : -2.96301,
+	"C00003_c[900] (cr) R00093_c[1]" : -0.833326,
+	"R01130_c (rc) C00655_c" : 0.0247896,
+	"C00001_c[486] (cr) R00243_c" : 0.125397,
+	"C00044_c[99] (cr) R00885" : 1.63418,
+	"C00037_b[606] (cr) glycine_btoc_s" : -0.60835,
+	"R00332_c (rc) C00035_c" : 0.0247896,
+	"C01103_c (cr) R00965_c" : 0.147652,
+	"R00894_c (rc) C00669_c" : 0.18,
+	"R01325_m (rc) C00417_m" : -0.685627,
+	"R02331_c (rc) C00460_c" : 0.015385,
+	"C00003_c[318] (cr) R01130_c" : 0.0247896,
+	"R00888 (rc) C01222_c" : 0.17976,
+	"R03314_c (rc) C00001_c[402]" : 1.12364,
+	"isoleucine_btoc_s (rc) C00407_c[617]" : 0.442268,
+	"C15973_a (cr) R07618_a" : 0.00436171,
+	"R01056 (rc) C00199_c" : -0.719426,
+	"R00351_m (rc) C00024_m" : 0.685627,
+	"R00551_c (rc) C00077_c" : 1.12364,
+	"R00894_c (rc) C00008_c[521]" : 0.18,
+	"R02569_a (rc) C00024_a" : -0.00436171,
+	"C00006_m[550] (cr) NADP_mtoc_s" : 0.685627,
+	"R02016_c (rc) C00343_c[273]" : -0.158608,
+	"R00575_balanced_c (rc) C00008_c[657]" : 0.147652,
+	"C00123_c[722] (cr) MalariaBiomass_s" : 1.15232,
+	"OHGbDigV_v (rc) C00123_v" : 0.0217963,
+	"R02570_m (rc) C00091_m" : 0.445811,
+	"R00112_c (rc) C00004_c[782]" : 1.96342,
+	"GenAcetylation_m (rc) C00010_m" : 0.685627,
+	"C00363_c (cr) R02093_c" : 0.063919,
+	"C00022_c (cr) R00703_c" : 60,
+	"C00041_b[590] (cr) alanine_btoc_s" : -1.4552,
+	"R02016_c (rc) C00005_c[274]" : -0.158608,
+	"C05381_m (cr) R03316_m" : 0.445811,
+	"C01172_c (cr) R02736" : 1.59337,
+	"C00001_b[610] (cr) H2O_btoc_s" : -23.1411,
+	"C00080_m[184] (cr) R00342_m" : 0.685627,
+	"C00365_c (cr) R02098_c" : -0.063919,
+	"C00025_b[602] (cr) glutamate_btoc_s" : 0.1,
+	"SFAE_a (rc) C00003_a[777]" : 0.00436171,
+	"C00002_c[305] (cr) R00573_c" : 0.0154467,
+	"NAD_mtoc_s (rc) C00003_c[547]" : 0.239816,
+	"C00064_v (cr) glutamine_vtoc_s" : 0.174371,
+	"C00111_c (cr) R01016_c" : 5.6,
+	"C00078_b[640] (cr) tryptophan_btoc_s" : -0.107,
+	"R02222_generalised_c (rc) C00996_c" : 0.0733994,
+	"R01827 (rc) C00279_c" : 0.436973,
+	"R00573_c (rc) C00025_c[310]" : 0.0154467,
+	"R01070_c (rc) C00111_c" : 36.1264,
+	"Slactate_btoc_s (rc) C00186_c" : -60,
+	"C00080_v[376] (cr) R00275_v" : 0.0435927,
+	"R00093_c (rc) C00080_c[484]" : -0.833326,
+	"C00065_c[730] (cr) MalariaBiomass_s" : 1.15232,
+	"C00002_c[365] (cr) R01857_c" : 0.015385,
+	"C00337_c (cr) R01993_c" : -0.147652,
+	"R00158_c (rc) C00015_c" : 0.147652,
+	"C01352_m[536] (cr) FADH2_mtoc_s" : 0.445811,
+	"C00074_a (cr) R00200_a" : 0.00436171,
+	"C00016_m[191] (cr) R00408_m" : 0.445811,
+	"Hemozoin_btov_s (rc) Hemozoin_v" : -0.0871854,
+	"C00704_v (cr) R00275_v" : 0.0435927,
+	"R01061_c (rc) C00080_c[125]" : 63.7598,
+	"C00004_m[548] (cr) NADH_mtoc_s" : -0.239816,
+	"R03270_a (rc) C16255_a" : 0.00436171,
+	"R05692 (rc) C00080_c[94]" : -0.17976,
+	"Glycerol_btoc_s (rc) C00116_c" : -3.33,
+	"C00135_v (cr) histidine_vtoc_s" : 0.828261,
+	"C00342_c[347] (cr) R02019_c" : 0.015385,
+	"C00002_c[523] (cr) R00497_c" : 0.18,
+	"C00668_c (cr) R02739_c" : -480.76,
+	"C00546_c (cr) R02530_c" : -5.6,
+	"Rlactate_btoc_s (rc) C00256_c" : -5.6,
+	"C00001_c[336] (cr) R00181_c" : -0.110012,
+	"PEP_ctoa_s (rc) C00074_a" : 0.00436171,
+	"R00093_c[1] (rc) C00064_c" : -0.833326,
+	"R01248_c (rc) C00080_c[390]" : -1.12364,
+	"C00002_c[55] (cr) R01049" : 0.147652,
+	"R00965_c (rc) C00105_c" : 0.147652,
+	"C00143_c (cr) R02101_c" : 0.063919,
+	"R08539_balanced_c (rc) C00006_c[765]" : 0.0733994,
+	"C00221_b (cr) BDG_btoc_s" : 19.24,
+	"R07618_a (rc) C00004_a[128]" : 0.00436171,
+	"methionine_btoc_s (rc) C00073_c[623]" : -0.113341,
+	"C00002_c[294] (cr) R02098_c" : -0.063919,
+	"C00003_m[193] (cr) R07618_m" : 0.445811,
+	"C05345_c (cr) R04779_c" : 36.1264,
+	"C06250_a (cr) R04385_a" : 0.00436171,
+	"R04386_balanced_a (rc) C00083_a" : 0.00436171,
+	"R07618_m (rc) C15972_m" : 0.445811,
+	"R00275_v (rc) C00007_v[377]" : 0.0435927,
+	"R00945_c (rc) C00101_c" : -0.063919,
+	"R01137_c (rc) C00008_c[364]" : 0.063919,
+	"R01600_c (rc) C00008_c[131]" : 19.24,
+	"arginine_vtoc_s (rc) C00062_c[385]" : 0.261556,
+	"MalariaBiomass_s (rc) C00020_c[757]" : 1.15232,
+	"R01082_m (rc) C00001_m[199]" : -0.445811,
+	"C00007_v[382] (cr) R03682_v" : 0.0217963,
+	"C00035_c (cr) R02019_c" : 0.015385,
+	"C00042_m (cr) R00408_m" : 0.445811,
+	"C00116_c (cr) R00847_c" : -3.33,
+	"C00105_c (cr) R00158_c" : 0.147652,
+	"C00459_c[744] (cr) MalariaBiomass_s" : 1.15232,
+	"serine_btoc_s (rc) C00065_c[637]" : -0.333963,
+	"C00131_c[742] (cr) MalariaBiomass_s" : 1.15232,
+	"asparagine_vtoc_s (rc) C00152_c[385]" : 0.435927,
+	"C00006_m[186] (cr) R00267_m" : -0.685627,
+	"R02740_c (rc) C05345_c" : 500,
+	"C00158_m (cr) R01325_m" : -0.685627,
+	"C01346_c (cr) R02018_c" : -0.0793039,
+	"OHGbDigV_v (rc) C00078_v" : 0.0217963,
+	"C00010_a (cr) R02569_a" : -0.00436171,
+	"C00001_c[144] (cr) R01736_c" : 5.6,
+	"C00041_v (cr) alanine_vtoc_s" : 1.56934,
+	"R00274_c (rc) C00001_c[516]" : 0.147652,
+	"C00003_c[388] (cr) R01248_c" : -1.12364,
+	"C00037_c[527] (cr) R00497_c" : 0.18,
+	"R00848_c (rc) C00093_c" : 0.445811,
+	"C00118_c (cr) R01641" : -0.436973,
+};          		
+	</script>	
+</body>
+</html>
