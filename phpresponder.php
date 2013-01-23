@@ -2,13 +2,13 @@
 createModelFile();
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
     // server using Windows!
-	exec("sfba.exe -i pf_iTF42_SFBA -o MalariaBiomass_s -p fba -s simplex -X _b -f results.txt");
+	exec("sfba.exe -i pf_iTF42_SFBA -o MalariaBiomass_s -p fba -s simplex -X _b -f resultsfor_". $_SERVER['REMOTE_ADDR']);
 } else {
     // server not using Windows!
-	exec("./sfba -i pf_iTF42_SFBA -o MalariaBiomass_s -p fba -s simplex -X _b -f results.txt");
+	exec("./sfba -i pf_iTF42_SFBA -o MalariaBiomass_s -p fba -s simplex -X _b -f resultsfor_". $_SERVER['REMOTE_ADDR']);
 }
-exec("perl fluxestoJSON.pl");
-readfile("jsonfluxes.js");
+exec("perl fluxestoJSON.pl resultsfor_". $_SERVER['REMOTE_ADDR']);
+readfile("resultsfor_". $_SERVER['REMOTE_ADDR']."json.js");
 
 function createModelFile() {
 	$file = "pf_iTF42_SFBA";

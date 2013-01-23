@@ -1,7 +1,15 @@
 use strict;
 use warnings;
 
-open(WEIGHTS, "results.txt");
+my $filename;
+if ($ARGV[0]){
+	$filename = $ARGV[0];
+}
+else {
+	$filename = "results.txt";
+}
+
+open(WEIGHTS, $filename);
 open(EDGES, "resultstoedges.txt");
 
 my %fluxes;
@@ -25,15 +33,16 @@ while (<EDGES>) {
 	}
 }
 
-# output as a simple table
-foreach (keys %edgeflux) {	
-	print "$_\t$edgeflux{$_}\n";
-}
+# output as a simple table (for debug only)
+# foreach (keys %edgeflux) {	
+	# print "$_\t$edgeflux{$_}\n";
+# }
 
-open(JSON, ">jsonfluxes.js");
+open(JSON, ">".$filename."json.js");
 # output as JSON
 print JSON "jsonfluxes = {\n";
 foreach (keys %edgeflux) {
 	print JSON "\t".'"'.$_.'" : '.$edgeflux{$_}.','."\n";
 }
 print JSON "}";
+close JSON;
